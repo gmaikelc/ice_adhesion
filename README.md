@@ -1,4 +1,4 @@
-# Low Regime Data for Ice Adhesion prediction
+# Low Regime Data Surrogate Models for Ice Adhesion prediction
 
 Author: Gerardo M Casanola-Martin
 
