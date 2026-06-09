@@ -486,11 +486,11 @@ def generate_silicone_oil(
 # ============================================================
 
 st.set_page_config(
-    page_title="Silicone Oil Descriptor Generator",
+    page_title="Silicone Oil Descriptor Generator and Predictor",
     layout="wide"
 )
 
-st.title("Silicone Oil Descriptor Generator")
+st.title("Silicone Oil Descriptor Generator and Ice Adhesion Prediction")
 st.write(
     "Generate a representative silicone oil from total MW, %DM, and PM/DP type. "
 )    
