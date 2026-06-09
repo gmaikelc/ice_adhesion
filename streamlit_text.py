@@ -666,7 +666,7 @@ def interpret_prediction(raw_prediction):
     if raw_prediction < 0:
         reported_prediction = 0.0
         prediction_note = (
-            "Raw model output was negative and physically unrealistic. "\n
+            "Raw model output was negative and physically unrealistic. "
             "The reported physical value was set to 0 kPa for interpretation. "
             "This result should be treated as model extrapolation or outside the reliable prediction domain."
         )
@@ -903,8 +903,9 @@ if st.session_state.result is not None:
 
             st.warning(
                 f"The raw model output was {raw_prediction:.4f} kPa, which is physically unrealistic "
-                "because ice adhesion cannot be negative. This result should be interpreted as "
-                "model extrapolation or as a formulation outside the reliable prediction domain."
+                "because ice adhesion cannot be negative.\n\n" 
+                "This result should be interpreted as model extrapolation or as a formulation" 
+                "outside the reliable prediction domain."
             )
 
             st.info(
