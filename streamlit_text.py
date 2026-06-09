@@ -62,7 +62,7 @@ from filelock import Timeout, FileLock
 #---------------------------------#
 # Page layout
 ## Page expands to full width
-st.set_page_config(page_title='Coating perfomance predictor', page_icon=":computer:", layout='wide')
+st.set_page_config(page_title='Ice adhesion perfomance predictor', page_icon=":computer:", layout='wide')
 
 ######
 # Function to put a picture as header   
@@ -71,7 +71,7 @@ def img_to_bytes(img_path):
     encoded = base64.b64encode(img_bytes).decode()
     return encoded
 
-image = Image.open('cropped_header2.png')
+image = Image.open('cropped_header.png')
 st.image(image)
 
 # app.py
