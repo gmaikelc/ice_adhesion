@@ -666,7 +666,7 @@ def interpret_prediction(raw_prediction):
     if raw_prediction < 0:
         reported_prediction = 0.0
         prediction_note = (
-            "Raw model output was negative and physically unrealistic. "
+            "Raw model output was negative and physically unrealistic. "\n
             "The reported physical value was set to 0 kPa for interpretation. "
             "This result should be treated as model extrapolation or outside the reliable prediction domain."
         )
