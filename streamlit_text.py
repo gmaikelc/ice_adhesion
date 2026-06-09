@@ -64,7 +64,7 @@ else:
 
 DATA_PATH = "data/data_MLR_2var_weighted_descriptors_observed_vs_predicted.csv.csv"
 MODEL_FOLDER = "models"
-MODEL_FILENAME = None
+MODEL_FILENAME = mlr_model.pkl
 
 
 # ============================================================
