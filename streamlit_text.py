@@ -493,6 +493,8 @@ st.set_page_config(
 st.title("Silicone Oil Descriptor Generator")
 st.write(
     "Generate a representative silicone oil from total MW, %DM, and PM/DP type. "
+)    
+st.write(    
     "The app calculates nAB and F07[C-O] from graph connectivity and can generate a 3D structure."
 )
 
