@@ -62,7 +62,7 @@ else:
 # INTERNAL PATHS — hidden from user interface
 # ============================================================
 
-DATA_PATH = "data/data_MLR_2var_weighted_descriptors_observed_vs_predicted.csv.csv"
+DATA_PATH = "data/data_MLR_2var_weighted_descriptors_observed_vs_predicted.csv"
 MODEL_FOLDER = "models"
 MODEL_FILENAME = "mlr_model.pkl"
 
