@@ -713,7 +713,7 @@ st.write(
 with st.sidebar:
     st.header("Silicone oil input")
 
-    oil_id = st.text_input("Oil ID", value="DP90_1600_5oil")
+    oil_id = st.text_input("Name your task", value="DP90_1600_5oil")
 
     total_MW = st.number_input(
         "Total silicone oil MW",
