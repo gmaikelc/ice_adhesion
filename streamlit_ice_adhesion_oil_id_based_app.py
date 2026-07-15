@@ -919,9 +919,9 @@ with st.sidebar:
         st.info(
             f"Generated Oil ID: \n\n"
             f"`{oil_id}`\n\n"
-            f"Second repeat unit: {parsed_preview['X_type']}\n\n"
-            f"{parsed_preview['X_type']} (%): {parsed_preview['percent_X_input']:.2f}\n\n"
-            f"Calculated DM (%): {calculated_DM:.2f}\n\n"
+            #f"Second repeat unit: {parsed_preview['X_type']}\n\n"
+            #f"{parsed_preview['X_type']} (%): {parsed_preview['percent_X_input']:.2f}\n\n"
+            #f"Calculated DM (%): {calculated_DM:.2f}\n\n"
             f"Total units including caps: {parsed_preview['total_units_including_caps']}\n\n"
             f"Internal repeat units: {parsed_preview['internal_repeat_units']}"
         )
