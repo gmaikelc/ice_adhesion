@@ -869,6 +869,19 @@ st.write(
 with st.sidebar:
     st.header("Silicone oil input")
 
+    total_units_including_caps = st.number_input(
+        "Total siloxane units including caps",
+        min_value=3,
+        max_value=1000,
+        value=24,
+        step=1,
+        help=(
+            "Total number of siloxane units including the two cap-ending units. "
+            "Example: 24 means 22 internal repeat units plus 2 cap-ending units."
+        )
+    )
+
+    
     X_type = st.selectbox(
         "Phenyl-containing repeat unit",
         options=["DP", "PM"],
@@ -892,18 +905,6 @@ with st.sidebar:
     )
 
     calculated_DM = 100.0 - percent_X
-
-    total_units_including_caps = st.number_input(
-        "Total siloxane units including caps",
-        min_value=3,
-        max_value=1000,
-        value=24,
-        step=1,
-        help=(
-            "Total number of siloxane units including the two cap-ending units. "
-            "Example: 24 means 22 internal repeat units plus 2 cap-ending units."
-        )
-    )
 
     try:
         oil_id = build_oil_id_from_inputs(
