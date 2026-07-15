@@ -27,6 +27,7 @@ from sklearn.preprocessing import MinMaxScaler
 from rdkit import Chem
 from rdkit.Chem import AllChem
 import py3Dmol
+from html import escape
 
 
 # ============================================================
