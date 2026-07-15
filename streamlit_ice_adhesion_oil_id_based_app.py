@@ -311,6 +311,67 @@ def calc_F07_C_O(mol):
 # Oil-ID parser and repeat-count estimation
 # ============================================================
 
+def format_percent_code(percent_X):
+    """
+    Convert a percentage to the Oil ID code.
+
+    Examples:
+        5   -> 005
+        20  -> 020
+        7.5 -> 07.5
+
+    The app uses integer percentages by default, but this function also
+    supports decimal values if you later allow them in the interface.
+    """
+
+    percent_X = float(percent_X)
+
+    if percent_X.is_integer():
+        return f"{int(round(percent_X)):03d}"
+
+    percent_code = f"{percent_X:.2f}".rstrip("0").rstrip(".")
+
+    if percent_X < 10:
+        percent_code = "0" + percent_code
+
+    return percent_code
+
+
+def build_oil_id_from_inputs(X_type, percent_X, total_units_including_caps):
+    """
+    Build Oil ID from user-selected inputs.
+
+    Examples:
+        X_type="DP", percent_X=20, total_units_including_caps=24
+            -> DPDM-020-024
+
+        X_type="PM", percent_X=5, total_units_including_caps=180
+            -> PMDM-005-180
+    """
+
+    X_type = str(X_type).strip().upper()
+
+    if X_type not in ["DP", "PM"]:
+        raise ValueError("Second repeat unit must be DP or PM.")
+
+    percent_X = float(percent_X)
+    total_units_including_caps = int(total_units_including_caps)
+
+    if percent_X < 0 or percent_X > 100:
+        raise ValueError("The DP/PM percentage must be between 0 and 100.")
+
+    if total_units_including_caps <= CAP_UNITS:
+        raise ValueError(
+            "Total units must be greater than 2 because two units are cap-ending units."
+        )
+
+    family = f"{X_type}DM"
+    percent_code = format_percent_code(percent_X)
+    total_units_code = f"{total_units_including_caps:03d}"
+
+    return f"{family}-{percent_code}-{total_units_code}"
+
+
 def parse_oil_id(oil_id):
     """
     Parse oil IDs such as:
@@ -794,8 +855,10 @@ if "prediction_value" not in st.session_state:
 st.title("Silicone Oil Ice-Adhesion Predictor")
 
 st.write(
-    "Generate a representative silicone oil structure from an Oil ID such as `DPDM-020-024` or `PMDM-005-180`. "
-    "Then run the ice-adhesion prediction using the internally stored model."
+    "Generate a representative silicone oil structure by selecting the phenyl-containing repeat unit, "
+    "entering its percentage, and entering the total number of siloxane units including the two cap-ending units. "
+    "The app automatically creates an Oil ID such as `DPDM-020-024` or `PMDM-005-180`, "
+    "then runs the ice-adhesion prediction using the internally stored model."
 )
 
 
@@ -806,31 +869,65 @@ st.write(
 with st.sidebar:
     st.header("Silicone oil input")
 
-    oil_id = st.text_input(
-        "Oil ID",
-        value="DPDM-020-024",
+    X_type = st.selectbox(
+        "Phenyl-containing repeat unit",
+        options=["DP", "PM"],
+        index=0,
         help=(
-            "Use format FAMILY-PERCENT-TOTALUNITS. "
-            "Examples: DPDM-020-024 or PMDM-005-180. "
-            "The last number is the total number of siloxane units including the two cap-ending units."
+            "DP = diphenylsiloxane unit. "
+            "PM = phenylmethylsiloxane unit."
+        )
+    )
+
+    percent_X = st.number_input(
+        f"{X_type} (%)",
+        min_value=0.0,
+        max_value=100.0,
+        value=20.0 if X_type == "DP" else 5.0,
+        step=1.0,
+        help=(
+            "Enter the percentage of the selected DP or PM unit. "
+            "The remaining percentage is assigned to dimethylsiloxane units."
+        )
+    )
+
+    calculated_DM = 100.0 - percent_X
+
+    total_units_including_caps = st.number_input(
+        "Total siloxane units including caps",
+        min_value=3,
+        max_value=1000,
+        value=24,
+        step=1,
+        help=(
+            "Total number of siloxane units including the two cap-ending units. "
+            "Example: 24 means 22 internal repeat units plus 2 cap-ending units."
         )
     )
 
     try:
+        oil_id = build_oil_id_from_inputs(
+            X_type=X_type,
+            percent_X=percent_X,
+            total_units_including_caps=total_units_including_caps
+        )
+
         parsed_preview = parse_oil_id(oil_id)
 
-        st.success("Oil ID parsed successfully.")
+        st.success("Oil ID generated successfully.")
         st.info(
+            f"Generated Oil ID: `{oil_id}`\n\n"
             f"Family: {parsed_preview['family']}\n\n"
             f"Second repeat unit: {parsed_preview['X_type']}\n\n"
             f"{parsed_preview['X_type']} (%): {parsed_preview['percent_X_input']:.2f}\n\n"
-            f"Calculated DM (%): {parsed_preview['percent_DM_input']:.2f}\n\n"
+            f"Calculated DM (%): {calculated_DM:.2f}\n\n"
             f"Total units including caps: {parsed_preview['total_units_including_caps']}\n\n"
             f"Internal repeat units: {parsed_preview['internal_repeat_units']}"
         )
 
     except Exception as e:
-        st.warning(f"Oil ID could not be parsed: {e}")
+        oil_id = None
+        st.warning(f"Oil ID could not be generated: {e}")
 
     st.caption("Composition basis: total units including cap-ending units")
     st.caption("Sequence mode: even")
@@ -862,7 +959,8 @@ with st.sidebar:
         "For large systems, keep UFF optimization disabled first."
     )
 
-    generate_button = st.button("1. Generate structure")
+    generate_button = st.button("1. Generate structure", disabled=(oil_id is None))
+
 
 
 # ============================================================
@@ -873,6 +971,9 @@ if generate_button:
     st.session_state.prediction_value = None
 
     try:
+        if oil_id is None:
+            raise ValueError("Oil ID was not generated. Check the input values.")
+
         mol, mol_3d, result = generate_silicone_oil(
             oil_id=oil_id,
             oil_loading_percent=oil_loading_percent,
