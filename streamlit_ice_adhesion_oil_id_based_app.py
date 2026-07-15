@@ -917,8 +917,8 @@ with st.sidebar:
 
         st.success("Oil ID generated successfully.")
         st.info(
-            f"Generated Oil ID: `{oil_id}`\n\n"
-            f"Family: {parsed_preview['family']}\n\n"
+            f"Generated Oil ID: \n\n"
+            f"`{oil_id}`\n\n"
             f"Second repeat unit: {parsed_preview['X_type']}\n\n"
             f"{parsed_preview['X_type']} (%): {parsed_preview['percent_X_input']:.2f}\n\n"
             f"Calculated DM (%): {calculated_DM:.2f}\n\n"
